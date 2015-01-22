@@ -1,11 +1,27 @@
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. LAB1a.
+       PROGRAM-ID. LAB2c.
        AUTHOR. Wyatt Reid.
        * "This program takes unsigned ints as input and reports the"
        * "last value entered before sentinel value."
 
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT INFILE ASSIGN TO "lab2c-in.dat"
+               ORGANIZATION IS LINE SEQUENTIAL
+               ACCESS MODE IS SEQUENTIAL.
+       
        DATA DIVISION.
+       FILE SECTION.
+       FD  INFILE.
+       01  Int-Record.
+           05  Int     Pic S9(5).
+
        WORKING-STORAGE SECTION.
+       01  WS-Int-Record.
+           05 WS-Int   Pic S9(5).
+       01  WS-EOF      Pic A(1).
+
        01  FOO-INT     PIC S9(5).
        01  HI-INT      PIC S9(5)   VALUE 0.
        01  LO-INT      PIC S9(5)   VALUE 9999.
@@ -13,25 +29,23 @@
        01  AVG-INT     PIC S9(5)   VALUE 0.
        01  NUM-INT     PIC S9(5)   VALUE 0.
        01  SUM-INT     PIC S9(5)   VALUE 0.
-       01  SESS        PIC  X(1).
 
        PROCEDURE DIVISION.
        000-MAIN.
-           PERFORM PROMPT-PARAGRAPH WITH TEST AFTER UNTIL FOO-INT = 0
+           PERFORM OPENINPUT-PARAGRAPH
+           PERFORM READ-PARAGRAPH WITH TEST BEFORE UNTIL WS-EOF = "Y"
            PERFORM COMP-AVG-PARAGRAPH
            PERFORM OUTPUT-PARAGRAPH
-           PERFORM SESS-PARAGRAPH
+           PERFORM CLOSEINPUT-PARAGRAPH
            PERFORM STOP-PARAGRAPH.
 
-       PROMPT-PARAGRAPH.
-           DISPLAY "Enter a 4-digit signed number (0 to stop): "
-               WITH NO ADVANCING
-           ACCEPT FOO-INT
-           IF FOO-INT = 0 THEN
-               EXIT PARAGRAPH
-           ELSE
+       READ-PARAGRAPH.
+           READ INFILE NEXT RECORD INTO WS-Int-Record
+               AT END MOVE "Y" to WS-EOF
+               NOT AT END
+               MOVE WS-Int TO FOO-INT
                PERFORM COMP-PARAGRAPH
-           END-IF.
+           END-READ.
 
        OUTPUT-PARAGRAPH.
            DISPLAY " "
@@ -55,22 +69,11 @@
        COMP-AVG-PARAGRAPH.
            COMPUTE AVG-INT = (SUM-INT) / (NUM-INT) .
 
-       SESS-PARAGRAPH.
-           DISPLAY "Another Session (Y/N)? "
-               WITH NO ADVANCING
-           ACCEPT SESS
-           IF SESS = "N" OR SESS = "n" THEN
-               GO TO STOP-PARAGRAPH
-           ELSE
-               DISPLAY " "
-               MOVE 0 TO HI-INT
-               MOVE 9999 to LO-INT
+       OPENINPUT-PARAGRAPH.
+           OPEN INPUT INFILE.
 
-               MOVE 0 TO AVG-INT
-               MOVE 0 TO SUM-INT
-               MOVE 0 TO NUM-INT
-               GO TO 000-MAIN
-           END-IF.
+       CLOSEINPUT-PARAGRAPH.
+           CLOSE INFILE.
 
        STOP-PARAGRAPH.
            STOP RUN.

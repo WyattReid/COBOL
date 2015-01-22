@@ -1,5 +1,5 @@
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. LAB1a.
+       PROGRAM-ID. LAB2b.
        AUTHOR. Wyatt Reid.
        * "This program takes unsigned ints as input and reports the"
        * "last value entered before sentinel value."
