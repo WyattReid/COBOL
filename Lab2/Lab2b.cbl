@@ -10,15 +10,17 @@
        01  HI-INT      PIC S9(5)   VALUE 0.
        01  LO-INT      PIC S9(5)   VALUE 9999.
 
-       01  AVG-INT     PIC S9(5).
-       01  NUM-INT     PIC S9(5).
-       01  SUM-INT     PIC S9(5).
+       01  AVG-INT     PIC S9(5)   VALUE 0.
+       01  NUM-INT     PIC S9(5)   VALUE 0.
+       01  SUM-INT     PIC S9(5)   VALUE 0.
+       01  SESS        PIC  X(1).
 
        PROCEDURE DIVISION.
        000-MAIN.
            PERFORM PROMPT-PARAGRAPH WITH TEST AFTER UNTIL FOO-INT = 0
            PERFORM COMP-AVG-PARAGRAPH
            PERFORM OUTPUT-PARAGRAPH
+           PERFORM SESS-PARAGRAPH
            PERFORM STOP-PARAGRAPH.
 
        PROMPT-PARAGRAPH.
@@ -35,7 +37,8 @@
            DISPLAY " "
            DISPLAY "The lowest value entered: " LO-INT
            DISPLAY "The highest value entered: " HI-INT
-           DISPLAY "The average value entered: " AVG-INT.
+           DISPLAY "The average value entered: " AVG-INT
+           DISPLAY " ".
 
        COMP-PARAGRAPH.
            IF FOO-INT IS LESS THAN OR EQUAL TO LO-INT
@@ -51,6 +54,23 @@
 
        COMP-AVG-PARAGRAPH.
            COMPUTE AVG-INT = (SUM-INT) / (NUM-INT) .
+
+       SESS-PARAGRAPH.
+           DISPLAY "Another Session (Y/N)? "
+               WITH NO ADVANCING
+           ACCEPT SESS
+           IF SESS = "N" OR SESS = "n" THEN
+               GO TO STOP-PARAGRAPH
+           ELSE
+               DISPLAY " "
+               MOVE 0 TO HI-INT
+               MOVE 9999 to LO-INT
+
+               MOVE 0 TO AVG-INT
+               MOVE 0 TO SUM-INT
+               MOVE 0 TO NUM-INT
+               GO TO 000-MAIN
+           END-IF.
 
        STOP-PARAGRAPH.
            STOP RUN.
