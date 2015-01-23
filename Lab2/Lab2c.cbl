@@ -15,20 +15,22 @@
        FILE SECTION.
        FD  INFILE.
        01  Int-Record.
-           05  Int     Pic S9(5).
+           05  Int     Pic S9(4).
 
        WORKING-STORAGE SECTION.
        01  WS-Int-Record.
-           05 WS-Int   Pic S9(5).
-       01  WS-EOF      Pic A(1).
+           05 WS-Int   Pic S9(4).
+       01  WS-EOF      Pic  A(1).
 
-       01  FOO-INT     PIC S9(5).
-       01  HI-INT      PIC S9(5)   VALUE 0.
-       01  LO-INT      PIC S9(5)   VALUE 9999.
+       01  FOO-INT     PIC S9(4).
+       01  HI-INT      PIC S9(4)   VALUE 0.
+       01  LO-INT      PIC S9(4)   VALUE 9999.
 
-       01  AVG-INT     PIC S9(5)   VALUE 0.
-       01  NUM-INT     PIC S9(5)   VALUE 0.
-       01  SUM-INT     PIC S9(5)   VALUE 0.
+       01  AVG-INT     PIC S9(4)   VALUE 0.
+       01  NUM-INT     PIC S9(4)   VALUE 0.
+       01  SUM-INT     PIC S9(4)   VALUE 0.
+
+       01 FORM-INT     PIC Z(04)9.9(2).
 
        PROCEDURE DIVISION.
        000-MAIN.
@@ -49,10 +51,33 @@
 
        OUTPUT-PARAGRAPH.
            DISPLAY " "
-           DISPLAY "The lowest value entered: " LO-INT
-           DISPLAY "The highest value entered: " HI-INT
-           DISPLAY "The average value entered: " AVG-INT
-           DISPLAY " ".
+
+           MOVE LO-INT TO FORM-INT
+           DISPLAY "The lowest  value entered: "
+               WITH NO ADVANCING
+               IF LO-INT IS LESS THAN 0 THEN
+                   DISPLAY "-"
+                   WITH NO ADVANCING
+               END-IF
+               DISPLAY FORM-INT
+
+           MOVE HI-INT TO FORM-INT
+           DISPLAY "The highest value entered: "
+               WITH NO ADVANCING
+               IF HI-INT IS LESS THAN 0 THEN
+                   DISPLAY "-"
+                   WITH NO ADVANCING
+               END-IF
+               DISPLAY FORM-INT
+
+           MOVE AVG-INT TO FORM-INT
+           DISPLAY "The average value entered: "
+               WITH NO ADVANCING
+               IF AVG-INT IS LESS THAN 0 THEN
+                   DISPLAY "-"
+                   WITH NO ADVANCING
+               END-IF
+               DISPLAY FORM-INT.
 
        COMP-PARAGRAPH.
            IF FOO-INT IS LESS THAN OR EQUAL TO LO-INT

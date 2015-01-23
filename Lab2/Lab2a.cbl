@@ -6,13 +6,15 @@
 
        DATA DIVISION.
        WORKING-STORAGE SECTION.
-       01  FOO-INT     PIC S9(5).
-       01  HI-INT      PIC S9(5)   VALUE 0.
-       01  LO-INT      PIC S9(5)   VALUE 9999.
+       01  FOO-INT     PIC S9(5)V9(2).
+       01  HI-INT      PIC S9(5)V9(2)   VALUE 0.
+       01  LO-INT      PIC S9(5)V9(2)   VALUE 9999.
 
-       01  AVG-INT     PIC S9(5).
-       01  NUM-INT     PIC S9(5).
-       01  SUM-INT     PIC S9(5).
+       01  AVG-INT     PIC S9(5)V9(2)   VALUE 0.
+       01  NUM-INT     PIC S9(5)V9(2)   VALUE 0.
+       01  SUM-INT     PIC S9(5)V9(2)   VALUE 0.
+
+       01 FORMATTED-INT          PIC Z(04)9.9(2).
 
        PROCEDURE DIVISION.
        000-MAIN.
@@ -33,9 +35,35 @@
 
        OUTPUT-PARAGRAPH.
            DISPLAY " "
-           DISPLAY "The lowest value entered: " LO-INT
-           DISPLAY "The highest value entered: " HI-INT
-           DISPLAY "The average value entered: " AVG-INT.
+
+           MOVE LO-INT TO FORMATTED-INT
+           DISPLAY "The lowest  value entered: "
+               WITH NO ADVANCING
+               IF LO-INT IS LESS THAN 0 THEN
+                   DISPLAY "-"
+                   WITH NO ADVANCING
+               END-IF
+               DISPLAY FORMATTED-INT
+
+           MOVE HI-INT TO FORMATTED-INT
+           DISPLAY "The highest value entered: "
+               WITH NO ADVANCING
+               IF HI-INT IS LESS THAN 0 THEN
+                   DISPLAY "-"
+                   WITH NO ADVANCING
+               END-IF
+               DISPLAY FORMATTED-INT
+
+           MOVE AVG-INT TO FORMATTED-INT
+           DISPLAY "The average value entered: "
+               WITH NO ADVANCING
+               IF AVG-INT IS LESS THAN 0 THEN
+                   DISPLAY "-"
+                   WITH NO ADVANCING
+               END-IF
+               DISPLAY FORMATTED-INT
+
+               DISPLAY " ".
 
        COMP-PARAGRAPH.
            IF FOO-INT IS LESS THAN OR EQUAL TO LO-INT
