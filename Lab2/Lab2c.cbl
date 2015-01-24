@@ -86,7 +86,8 @@
                    MOVE FOO-INT TO HI-INT
                END-IF
            ELSE
-               MOVE FOO-INT TO HI-INT
+               IF FOO-INT IS GREATER THAN OR EQUAL TO HI-INT
+                   MOVE FOO-INT TO HI-INT
            END-IF
            ADD 1 to NUM-INT
            ADD FOO-INT TO SUM-INT.
